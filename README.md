@@ -1,6 +1,6 @@
 <div align="center">
 
-# AgriAI — AI Yield Intelligence for Nigerian Farmers
+# AgriAI AI Yield Intelligence for Nigerian Farmers
 
 **Closing the data gap for 36 million smallholder farmers, one prediction at a time.**
 
@@ -244,9 +244,9 @@ npm test
 
 ---
 
-## 🌾 Real-World Impact
+Real-World Impact
 
-### Who benefits
+Who benefits
 
 - **36+ million smallholder farmers** across Nigeria the primary user base.
 - State agricultural extension officers AgriAI gives them a scalable triage tool: a tablet, an internet connection, and they can serve hundreds of farmers a week instead of dozens.
@@ -266,7 +266,7 @@ npm test
 
 Every state above is validated end-to-end through `/regions`, `/predict`, and the `/insights/regional-summary` endpoint.
 
-### Advancing the African tech ecosystem
+ Advancing the African tech ecosystem
 
 - **Open source by default.** AgriAI ships under the MIT licence so that any Nigerian  or pan-African engineer can fork, extend, or self-host without negotiating a commercial licence.
 - **Locally grounded data model.** The yield engine encodes Nigerian agronomic reality (Harmattan timing, North-East rainfall scarcity, South-East cassava dominance) instead of bolting Nigeria onto a model trained on temperate latitudes.
@@ -275,15 +275,15 @@ Every state above is validated end-to-end through `/regions`, `/predict`, and th
 
 ---
 
-## 🎓 Research & Academic Context
+ Research & Academic Context
 
 This project sits at the intersection of three active research strands that the author is exploring as part of ongoing academic work affiliated with **Abia State University, Nigeria**:
 
 1. **Precision agriculture in sub-Saharan Africa.** A growing body of peer-reviewed work demonstrates that simple, interpretable yield models conditioned on regional agroclimatic variables consistently outperform global one-size-fits-all models for African smallholder contexts. AgriAI's six-zone yield index and crop × season interaction terms are a direct operationalisation of that literature.
-2. **Mobile-first information systems for low-resource settings.** Studies on rural ICT adoption in Nigeria repeatedly show that solutions which assume constant connectivity, latest-generation hardware, or high digital literacy fail in deployment. AgriAI's design choices — AsyncStorage cache, chip-based pickers instead of free-text inputs, sub-100 KB JSON payloads — are derived from this evidence base.
+2. **Mobile-first information systems for low-resource settings.** Studies on rural ICT adoption in Nigeria repeatedly show that solutions which assume constant connectivity, latest-generation hardware, or high digital literacy fail in deployment. AgriAI's design choices  AsyncStorage cache, chip-based pickers instead of free-text inputs, sub-100 KB JSON payloads — are derived from this evidence base.
 3. **Cloud-native delivery of AI for developing economies.** Recent work on the cost-economics of inference at the edge versus in the cloud informs AgriAI's hybrid posture: an interpretable model running cheaply in a containerised FastAPI service, with the heavier ML roadmap (satellite tiles, deep CNN crop classifiers) reserved for AWS-side execution.
 
-The project is positioned to contribute back in the form of a methods paper — *"Region-Conditioned Yield Estimation for Nigerian Smallholder Agriculture: A Reproducible Open-Source Reference"* — currently in preparation.
+The project is positioned to contribute back in the form of a methods paper *"Region-Conditioned Yield Estimation for Nigerian Smallholder Agriculture: A Reproducible Open-Source Reference"* currently in preparation.
 
 ---
 
