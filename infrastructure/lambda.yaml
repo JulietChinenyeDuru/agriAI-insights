@@ -93,9 +93,12 @@ Resources:
         Variables:
           LOG_LEVEL: INFO
       Tags:
-        Project: AgriAI
-        ManagedBy: CloudFormation
-        Owner: Juliet-Chinenye-Duru
+        - Key: Project
+          Value: AgriAI
+        - Key: ManagedBy
+          Value: CloudFormation
+        - Key: Owner
+          Value: Juliet-Chinenye-Duru
 
   # ── API Gateway HTTP API ──────────────────────────────────────────────────────
   HttpApi:
