@@ -17,17 +17,17 @@
 
 ---
 
-## 🌍 The Problem
+The Problem
 
-Nigerian agriculture sits on a paradox: it employs **over 36 million smallholder farmers** — roughly **70% of the national labour force** — yet produces some of the lowest per-hectare yields in the world. The consequence is staggering.
+Nigerian agriculture sits on a paradox: it employs over 36 million smallholder farmers roughly 70% of the national labour force yet produces some of the lowest per-hectare yields in the world. The consequence is staggering.
 
-> 🟥 **Nigeria loses an estimated ₦3.5 trillion (~US$2.3 billion) in crop value every year** to preventable failures: planting the wrong crop for a region, mistiming the wet-and-dry-season cycle, under-fertilising, and selling into volatile markets without forecast data.
+> Nigeria loses an estimated ₦3.5 trillion (~US$2.3 billion) in crop value every year to preventable failures: planting the wrong crop for a region, mistiming the wet-and-dry-season cycle, under-fertilising, and selling into volatile markets without forecast data.
 
-The root cause is not effort. It is information asymmetry. While farmers in Iowa, Punjab, and the Netherlands plant against satellite imagery, soil-sensor telemetry, and ML-driven yield models, the smallholder in **Borno, Kebbi, or Cross River** plants against memory of last year's rain.
+The root cause is not effort. It is information asymmetry. While farmers in Iowa, Punjab, and the Netherlands plant against satellite imagery, soil-sensor telemetry, and ML-driven yield models, the smallholder in Borno, Kebbi, or Cross River plants against memory of last year's rain.
 
 ### How AgriAI Solves It
 
-AgriAI is a Nigeria-first, mobile-first decision support system that puts a yield-prediction model directly into a farmer's hand — runnable on a US$60 Android phone, over a 3G connection, in any of Nigeria's **six geopolitical zones**.
+AgriAI is a Nigeria-first, mobile-first decision support system that puts a yield-prediction model directly into a farmer's hand runnable on a US$60 Android phone, over a 3G connection, in any of Nigeria's six geopolitical zones.
 
 | Pain Point                                                  | AgriAI's Response                                                                                          |
 | ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
@@ -39,7 +39,7 @@ AgriAI is a Nigeria-first, mobile-first decision support system that puts a yiel
 
 ---
 
-## 🏗 System Architecture
+System Architecture
 
 ```
         ┌──────────────────────────────────────────────────────────────────┐
@@ -100,11 +100,11 @@ AgriAI is a Nigeria-first, mobile-first decision support system that puts a yiel
         └──────────────────────────────────────────────────────────────────┘
 ```
 
-**Implementation status.** The mobile app, FastAPI service, and yield engine in this repository are fully implemented and runnable. The AWS deployment topology shown above is the production reference architecture; see the [Roadmap](#-roadmap) for the deployment milestone.
+Implementation status. The mobile app, FastAPI service, and yield engine in this repository are fully implemented and runnable. The AWS deployment topology shown above is the production reference architecture; see the [Roadmap](#-roadmap) for the deployment milestone.
 
 ---
 
-## 🔌 API Reference
+ API Reference
 
 The backend exposes **seven endpoints**, all returning JSON, all auto-documented at `/docs` (Swagger UI) and `/redoc`.
 
@@ -115,10 +115,10 @@ The backend exposes **seven endpoints**, all returning JSON, all auto-documented
 | 3 | `GET`  | `/regions`                     | All 36 Nigerian states + FCT, grouped by geopolitical zone                |
 | 4 | `GET`  | `/crops`                       | Catalogue of supported crops with avg yield, season, and region fit       |
 | 5 | `GET`  | `/seasons/current`             | Current Nigerian farming season (rainy ↔ dry / Harmattan)                 |
-| 6 | `GET`  | `/insights/regional-summary`   | Aggregate yield benchmarks per zone — rainfall, multiplier, performance   |
+| 6 | `GET`  | `/insights/regional-summary`   | Aggregate yield benchmarks per zone rainfall, multiplier, performance   |
 | 7 | `GET`  | `/history?limit=N`             | Most recent server-side predictions, newest first (max 500)               |
 
-### Example: `POST /predict`
+ Example: `POST /predict`
 
 ```bash
 curl -X POST http://localhost:8000/predict \
@@ -151,7 +151,7 @@ curl -X POST http://localhost:8000/predict \
 
 ---
 
-## 🧰 Tech Stack
+Tech Stack
 
 | Layer                 | Technology                              | Why it was chosen                                                   |
 | --------------------- | --------------------------------------- | ------------------------------------------------------------------- |
@@ -170,15 +170,15 @@ curl -X POST http://localhost:8000/predict \
 
 ---
 
-## 🚀 Installation
+Installation
 
-### Prerequisites
+Prerequisites
 - **Python 3.10+** (3.12 recommended)
 - **Node.js 18+** and **npm 9+**
 - **Expo Go** app installed on your phone (Android or iOS) for live preview
 - Optional: **Docker 24+** for containerised runs
 
-### 1️⃣ Backend setup (FastAPI)
+ 1️⃣ Backend setup (FastAPI)
 
 ```bash
 # from the repository root
@@ -197,7 +197,7 @@ uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
 
 The interactive API docs are then live at <http://localhost:8000/docs>.
 
-### 2️⃣ Mobile app setup (React Native + Expo)
+2️⃣ Mobile app setup (React Native + Expo)
 
 ```bash
 cd agriAI-app/mobile
@@ -214,7 +214,7 @@ A QR code prints in the terminal. Open it in the **Expo Go** app on a real devic
 EXPO_PUBLIC_AGRIAI_API_URL=http://192.168.1.20:8000 npx expo start
 ```
 
-### 3️⃣ Running tests
+3️⃣ Running tests
 
 ```bash
 # backend — pytest + httpx test client
@@ -231,9 +231,9 @@ npm test
 
 ---
 
-## 📸 Screenshots
+ Screenshots
 
-> Placeholder mockups — replace with live captures once the app is deployed to Expo.
+> Placeholder mockups replace with live captures once the app is deployed to Expo.
 
 | Home (current season) | Prediction form | AI results |
 | --------------------- | --------------- | ---------- |
@@ -249,10 +249,10 @@ npm test
 
 ### Who benefits
 
-- **36+ million smallholder farmers** across Nigeria — the primary user base.
-- **State agricultural extension officers** — AgriAI gives them a scalable triage tool: a tablet, an internet connection, and they can serve hundreds of farmers a week instead of dozens.
-- **Cooperatives and input-finance lenders** — better yield priors translate directly into better collateral models.
-- **Agritech researchers** — open API and open licence make AgriAI a citable benchmark for downstream work.
+- **36+ million smallholder farmers** across Nigeria the primary user base.
+- State agricultural extension officers AgriAI gives them a scalable triage tool: a tablet, an internet connection, and they can serve hundreds of farmers a week instead of dozens.
+- **Cooperatives and input-finance lenders** better yield priors translate directly into better collateral models.
+- **Agritech researchers**open API and open licence make AgriAI a citable benchmark for downstream work.
 
 ### Coverage — all 36 states + the FCT
 
@@ -269,9 +269,9 @@ Every state above is validated end-to-end through `/regions`, `/predict`, and th
 
 ### Advancing the African tech ecosystem
 
-- **Open source by default.** AgriAI ships under the MIT licence so that any Nigerian — or pan-African — engineer can fork, extend, or self-host without negotiating a commercial licence.
+- **Open source by default.** AgriAI ships under the MIT licence so that any Nigerian  or pan-African engineer can fork, extend, or self-host without negotiating a commercial licence.
 - **Locally grounded data model.** The yield engine encodes Nigerian agronomic reality (Harmattan timing, North-East rainfall scarcity, South-East cassava dominance) instead of bolting Nigeria onto a model trained on temperate latitudes.
-- **Talent flywheel.** The codebase is intentionally readable — typed Pydantic models, named factors, no opaque ML — so that an undergraduate at **Abia State University** can run it, modify the factor model, and publish a follow-up paper without first wrestling a research framework into shape.
+- **Talent flywheel.** The codebase is intentionally readable typed Pydantic models, named factors, no opaque ML so that an undergraduate at **Abia State University** can run it, modify the factor model, and publish a follow-up paper without first wrestling a research framework into shape.
 - **Architectural blueprint.** The FastAPI + React Native + AWS pattern is reusable for adjacent African verticals: aquaculture in Lagos, livestock in Kaduna, agroforestry in Cross River.
 
 ---
@@ -288,7 +288,7 @@ The project is positioned to contribute back in the form of a methods paper — 
 
 ---
 
-## 🛣 Roadmap
+Roadmap
 
 | #  | Milestone                                          | What it unlocks                                                                  |
 | -- | -------------------------------------------------- | -------------------------------------------------------------------------------- |
@@ -301,16 +301,16 @@ The project is positioned to contribute back in the form of a methods paper — 
 
 ---
 
-## 🤝 Contributing
+Contributing
 
-AgriAI is **open source and Nigerian-built** — and contributions from anywhere are explicitly welcome.
+AgriAI is **open source and Nigerian-built** and contributions from anywhere are explicitly welcome.
 
 1. Fork the repository.
 2. Create a feature branch: `git checkout -b feat/your-feature`.
-3. Run the test suite locally — `pytest` for backend, `npm test` for mobile.
+3. Run the test suite locally  `pytest` for backend, `npm test` for mobile.
 4. Submit a PR with a clear description and, where relevant, before/after screenshots.
 
-If you are a **Nigerian undergraduate, graduate student, or extension officer**, please open an issue first — there may be a research-track contribution path with co-authorship.
+If you are a **Nigerian undergraduate, graduate student, or extension officer**, please open an issue first  there may be a research-track contribution path with co-authorship.
 
 Areas where help is most useful right now:
 - Translating the mobile app into **Hausa, Yoruba, or Igbo**.
@@ -320,7 +320,7 @@ Areas where help is most useful right now:
 
 ---
 
-## 👩🏽‍💻 Author
+ Author
 
 <table>
   <tr>
@@ -331,13 +331,13 @@ Areas where help is most useful right now:
       <h3>Juliet Chinenye Duru</h3>
       <p><em>Academic Researcher · Data Engineer · Cloud &amp; AI DevOps Enthusiast</em></p>
       <p>
-        🎓 <strong>Abia State University, Nigeria</strong><br/>
-        🐙 GitHub: <a href="https://github.com/JulietChinenyeDuru">@JulietChinenyeDuru</a><br/>
-        ✉️  durujulietchinenye@gmail.com
+         <strong>Abia State University, Nigeria</strong><br/>
+         GitHub: <a href="https://github.com/JulietChinenyeDuru">@JulietChinenyeDuru</a><br/>
+         durujulietchinenye@gmail.com
       </p>
       <p>
         Juliet builds open-source, cloud-native data systems for African agricultural and public-sector use cases.
-        Her work bridges peer-reviewed research and shipped production code — turning academic insight into
+        Her work bridges peer-reviewed research and shipped production code turning academic insight into
         software that runs on the phone of a farmer in Umuahia or Kano, not just on a poster at a conference.
       </p>
     </td>
