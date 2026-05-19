@@ -346,9 +346,6 @@ Areas where help is most useful right now:
 
 ---
 
-## 📄 Licence
-
-Released under the [MIT Licence](LICENSE). You may use, modify, and distribute this software — commercially or otherwise — provided the copyright notice is preserved.
 
 ---
 
