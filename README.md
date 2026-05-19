@@ -253,7 +253,7 @@ Who benefits
 - **Cooperatives and input-finance lenders** better yield priors translate directly into better collateral models.
 - **Agritech researchers**open API and open licence make AgriAI a citable benchmark for downstream work.
 
-### Coverage — all 36 states + the FCT
+ Coverage all 36 states + the FCT
 
 | Zone           | States                                                                                          |
 | -------------- | ----------------------------------------------------------------------------------------------- |
@@ -350,7 +350,7 @@ Areas where help is most useful right now:
 
 <div align="center">
 
-**Built in Nigeria · For Nigerian farmers · For the global open-source commons.**
+**Built For Nigerian farmers · For the global open-source commons.**
 
 *If this project advances your work, please consider citing it and starring the repository.*
 
