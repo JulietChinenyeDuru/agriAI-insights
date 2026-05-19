@@ -34,7 +34,7 @@ AgriAI is a Nigeria-first, mobile-first decision support system that puts a yiel
 | Farmers don't know what their land *can* yield              | A POST to `/predict` returns tonnes-per-hectare grounded in regional rainfall × soil × fertilizer × season |
 | No localized agronomic guidance                             | Every prediction returns a context-aware recommendation (e.g. "apply 100–150 kg/ha NPK", "switch season")  |
 | Extension officers can't reach 36M farmers                  | A FastAPI + React Native architecture that scales horizontally on commodity AWS infrastructure             |
-| Connectivity gaps in rural areas                            | AsyncStorage on the device — predictions persist offline and resync                                        |
+| Connectivity gaps in rural areas                            | AsyncStorage on the device predictions persist offline and resync                                        |
 | Crop calendars vary across regions but advice is one-size   | Six-zone yield index (North-West, North-East, North-Central, South-West, South-East, South-South)         |
 
 ---
@@ -161,12 +161,11 @@ Tech Stack
 | API runtime           | **FastAPI 0.115** on **Uvicorn 0.30**   | Async I/O, auto OpenAPI, sub-millisecond JSON serialisation         |
 | Data validation       | **Pydantic v2.9**                       | Type-safe payload validation; rust-backed performance               |
 | Language (backend)    | **Python 3.12**                         | Mature ML ecosystem; readable for academic collaborators            |
-| ML model              | **Multivariate factor model** (in-tree) | Interpretable, no opaque LLM dependency — auditable for farmers     |
+| ML model              | **Multivariate factor model** (in-tree) | Interpretable, no opaque LLM dependency  auditable for farmers     |
 | Containerisation      | **Docker**                              | Reproducible deploys across local, staging, and AWS ECS Fargate     |
 | Cloud (target)        | **AWS** (ECS, RDS, S3, CloudFront, API GW) | Native eu-west-2 latency to West Africa; well-supported in NG    |
 | Observability         | **CloudWatch + AWS X-Ray**              | Distributed tracing across mobile → API → model calls               |
-| CI/CD (planned)       | **GitHub Actions**                      | Test on every PR; container build + ECS deploy on `main`            |
-| Licence               | **MIT**                                 | Open-source friendly; encourages academic reuse                     |
+| CI/CD (planned)       | **GitHub Actions**                      | Test on every PR; container build + ECS deploy on `main`                                            | Open-source friendly; encourages academic reuse                     
 
 ---
 
@@ -206,7 +205,7 @@ npm install
 npx expo start
 ```
 
-A QR code prints in the terminal. Open it in the **Expo Go** app on a real device (recommended — emulators don't reflect real low-end performance).
+A QR code prints in the terminal. Open it in the **Expo Go** app on a real device (recommended emulators don't reflect real low-end performance).
 
 **Pointing the app at a non-localhost backend** (e.g. a phone hitting your laptop over LAN, or staging on AWS):
 
@@ -333,7 +332,7 @@ Areas where help is most useful right now:
       <p>
          <strong>Abia State University, Nigeria</strong><br/>
          GitHub: <a href="https://github.com/JulietChinenyeDuru">@JulietChinenyeDuru</a><br/>
-         durujulietchinenye@gmail.com
+         durujulietchinenye@gmail.com /duru.juliet@abiastateuniversity.edu.ng
       </p>
       <p>
         Juliet builds open-source, cloud-native data systems for African agricultural and public-sector use cases.
