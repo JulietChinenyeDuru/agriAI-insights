@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "AgriAI",
+    "slug": "agriai-insights",
+    "owner": "julietchinenyeduru",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "primaryColor": "#2E7D32",
+    "scheme": "agriai",
+    "platforms": ["android", "ios"],
+    "splash": {
+      "backgroundColor": "#2E7D32",
+      "resizeMode": "contain"
+    },
+    "android": {
+      "package": "com.julietchinenyeduru.agriai",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "backgroundColor": "#2E7D32"
+      },
+      "permissions": ["INTERNET"]
+    },
+    "ios": {
+      "bundleIdentifier": "com.julietchinenyeduru.agriai",
+      "buildNumber": "1.0.0",
+      "supportsTablet": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "00000000-0000-0000-0000-000000000000"
+      }
+    }
+  }
+}
