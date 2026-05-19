@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AgriAI — AI Yield Intelligence for Nigerian Farmers</title>
+  <meta name="description" content="AgriAI is an open-source, mobile-first AI yield prediction system built for Nigeria's 36 million smallholder farmers. FastAPI + React Native + AWS." />
+  <meta name="author" content="Juliet Chinenye Duru" />
+  <meta name="theme-color" content="#2E7D32" />
+
+  <meta property="og:title" content="AgriAI — AI Yield Intelligence for Nigerian Farmers" />
+  <meta property="og:description" content="Closing the data gap for 36 million Nigerian smallholder farmers, one prediction at a time." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://julietchinenyeduru.github.io/agriAI-insights/" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --green-900: #1B5E20;
+      --green-800: #2E7D32;
+      --green-600: #43A047;
+      --green-100: #E8F5E9;
+      --green-050: #F1F8E9;
+      --ink-900: #1A2421;
+      --ink-700: #37474F;
+      --ink-500: #607D8B;
+      --soil-500: #8D6E63;
+      --sun-500: #FBC02D;
+      --white: #FFFFFF;
+      --radius: 14px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+      --shadow-md: 0 6px 24px rgba(27,94,32,.10);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      color: var(--ink-900);
+      background: var(--green-050);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--green-800); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+    /* Header / nav */
+    header.nav {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: saturate(180%) blur(8px);
+      border-bottom: 1px solid #DCEDC8;
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 24px; max-width: 1100px; margin: 0 auto;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 800; color: var(--green-900); font-size: 20px;
+    }
+    .brand-dot {
+      width: 28px; height: 28px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--green-800), var(--green-600));
+      display: inline-flex; align-items: center; justify-content: center;
+      color: var(--white); font-weight: 800; font-size: 14px;
+    }
+    nav.links a {
+      margin-left: 22px; font-weight: 500; color: var(--ink-700);
+    }
+    nav.links a:hover { color: var(--green-800); }
+
+    /* Hero */
+    .hero {
+      padding: 80px 0 64px;
+      background:
+        radial-gradient(1200px 400px at 80% -50px, rgba(67,160,71,.18), transparent 60%),
+        radial-gradient(900px 300px at 10% 10%, rgba(251,192,45,.18), transparent 60%);
+    }
+    .hero h1 {
+      font-size: clamp(36px, 5.5vw, 60px);
+      line-height: 1.05; margin: 0 0 16px;
+      color: var(--green-900); letter-spacing: -0.02em; font-weight: 800;
+    }
+    .hero .lede {
+      font-size: 19px; color: var(--ink-700); max-width: 720px; margin: 0 0 28px;
+    }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 12px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 22px; border-radius: 10px;
+      font-weight: 700; font-size: 15px; transition: transform .12s ease, box-shadow .12s ease;
+    }
+    .btn-primary { background: var(--green-800); color: var(--white); box-shadow: var(--shadow-sm); }
+    .btn-primary:hover { background: var(--green-900); transform: translateY(-1px); text-decoration: none; box-shadow: var(--shadow-md); }
+    .btn-ghost { background: var(--white); color: var(--green-800); border: 1.5px solid var(--green-800); }
+    .btn-ghost:hover { background: var(--green-100); text-decoration: none; }
+
+    .pills { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 10px; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 12px; border-radius: 999px;
+      background: var(--white); color: var(--green-900);
+      border: 1px solid #C5E1A5; font-size: 13px; font-weight: 600;
+    }
+
+    /* Section heading */
+    section { padding: 64px 0; }
+    section h2 {
+      font-size: clamp(26px, 3vw, 34px);
+      color: var(--green-900); margin: 0 0 8px;
+      letter-spacing: -0.01em;
+    }
+    section .eyebrow {
+      text-transform: uppercase; letter-spacing: 1.2px; font-size: 12px;
+      color: var(--green-800); font-weight: 700; margin-bottom: 8px;
+    }
+    section .sub {
+      color: var(--ink-700); max-width: 760px; margin: 0 0 36px;
+    }
+
+    /* Stat row */
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+    .stat {
+      background: var(--white); border-radius: var(--radius);
+      padding: 22px; box-shadow: var(--shadow-sm); border: 1px solid #DCEDC8;
+    }
+    .stat .num { font-size: 32px; font-weight: 800; color: var(--green-900); letter-spacing: -0.02em; }
+    .stat .label { color: var(--ink-500); font-size: 14px; margin-top: 4px; }
+
+    /* Feature cards */
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+    .feature {
+      background: var(--white); border-radius: var(--radius);
+      padding: 22px; box-shadow: var(--shadow-sm); border: 1px solid #DCEDC8;
+    }
+    .feature h3 { margin: 8px 0 6px; color: var(--green-900); font-size: 18px; }
+    .feature p { margin: 0; color: var(--ink-700); font-size: 14.5px; }
+    .feature .icon {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: var(--green-100); color: var(--green-800);
+      display: inline-flex; align-items: center; justify-content: center; font-size: 20px;
+    }
+
+    /* Endpoint table */
+    .endpoint-table {
+      background: var(--white); border-radius: var(--radius);
+      overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid #DCEDC8;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+    th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid #ECEFF1; }
+    th { background: var(--green-100); color: var(--green-900); font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: .6px; }
+    tr:last-child td { border-bottom: none; }
+    code.method {
+      display: inline-block; padding: 2px 8px; border-radius: 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; font-weight: 700;
+    }
+    code.method.get { background: #E3F2FD; color: #1565C0; }
+    code.method.post { background: #FFF3E0; color: #E65100; }
+    code.path { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--ink-900); }
+
+    /* Privacy */
+    .privacy {
+      background: var(--white); border-radius: var(--radius);
+      padding: 30px; box-shadow: var(--shadow-sm); border: 1px solid #DCEDC8;
+    }
+    .privacy h3 { margin-top: 22px; color: var(--green-900); font-size: 18px; }
+    .privacy ul { padding-left: 20px; }
+    .privacy li { margin-bottom: 6px; color: var(--ink-700); }
+    .privacy .meta { color: var(--ink-500); font-size: 13px; margin-top: 0; }
+
+    /* Footer */
+    footer {
+      padding: 40px 0 60px; color: var(--ink-500); font-size: 14px;
+      border-top: 1px solid #DCEDC8; background: var(--white);
+    }
+    .footer-inner {
+      display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: center;
+    }
+    .footer-links a { margin-left: 16px; color: var(--ink-700); }
+
+    @media (max-width: 640px) {
+      nav.links { display: none; }
+      .hero { padding: 56px 0 40px; }
+      section { padding: 48px 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="#top">
+        <span class="brand-dot">A</span> AgriAI
+      </a>
+      <nav class="links">
+        <a href="#problem">Problem</a>
+        <a href="#features">Features</a>
+        <a href="#api">API</a>
+        <a href="#privacy">Privacy</a>
+        <a href="https://github.com/JulietChinenyeDuru/agriAI-insights" target="_blank" rel="noopener">GitHub ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <a id="top"></a>
+
+  <section class="hero">
+    <div class="container">
+      <div class="pills">
+        <span class="pill">🇳🇬 Nigeria-first</span>
+        <span class="pill">🌾 36 states + FCT</span>
+        <span class="pill">📱 Mobile-first</span>
+        <span class="pill">🔓 MIT licensed</span>
+      </div>
+      <h1 style="margin-top:18px">AI yield intelligence<br/>for Nigerian farmers.</h1>
+      <p class="lede">
+        AgriAI puts a region-aware crop yield model directly into the hand of any smallholder farmer with a
+        US$60 Android phone — closing an information gap that costs Nigeria an estimated
+        <strong>₦3.5 trillion in lost crop value</strong> every year.
+      </p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="https://github.com/JulietChinenyeDuru/agriAI-insights" target="_blank" rel="noopener">
+          ⭐ View on GitHub
+        </a>
+        <a class="btn btn-ghost" href="#api">Read the API docs</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="problem">
+    <div class="container">
+      <p class="eyebrow">The problem</p>
+      <h2>An information gap, not an effort gap.</h2>
+      <p class="sub">
+        Nigerian agriculture employs <strong>over 36 million smallholder farmers</strong> — roughly 70% of
+        the national labour force — yet operates without the satellite, soil-sensor, and ML-driven yield
+        forecasts taken for granted elsewhere. AgriAI exists to change that.
+      </p>
+      <div class="stats">
+        <div class="stat"><div class="num">36M+</div><div class="label">Nigerian smallholder farmers</div></div>
+        <div class="stat"><div class="num">₦3.5T</div><div class="label">Annual crop value lost</div></div>
+        <div class="stat"><div class="num">36 + FCT</div><div class="label">States covered end-to-end</div></div>
+        <div class="stat"><div class="num">10</div><div class="label">Staple crops modelled</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features" style="background:var(--white)">
+    <div class="container">
+      <p class="eyebrow">What's inside</p>
+      <h2>Built for the realities of rural deployment.</h2>
+      <p class="sub">
+        Every design decision is grounded in field constraints — patchy connectivity, low-end Android
+        devices, multilingual users, and locally distinct agronomic conditions across six geopolitical zones.
+      </p>
+      <div class="features">
+        <div class="feature">
+          <span class="icon">🧠</span>
+          <h3>Interpretable AI engine</h3>
+          <p>A multivariate factor model — crop baseline × regional multiplier × soil × rainfall × fertilizer — with a confidence score. No black box.</p>
+        </div>
+        <div class="feature">
+          <span class="icon">🗺</span>
+          <h3>Six-zone yield index</h3>
+          <p>North-West, North-East, North-Central, South-West, South-East, South-South — each with its own rainfall norm and yield multiplier.</p>
+        </div>
+        <div class="feature">
+          <span class="icon">📶</span>
+          <h3>Offline-first mobile UX</h3>
+          <p>AsyncStorage caches predictions on device so the app remains useful when the cellular signal drops.</p>
+        </div>
+        <div class="feature">
+          <span class="icon">⚡</span>
+          <h3>Async FastAPI backend</h3>
+          <p>Sub-millisecond JSON serialisation, type-safe Pydantic v2 validation, auto-generated OpenAPI docs.</p>
+        </div>
+        <div class="feature">
+          <span class="icon">☁️</span>
+          <h3>AWS-ready architecture</h3>
+          <p>Container-first design that targets ECS Fargate + RDS PostgreSQL + CloudFront in eu-west-2.</p>
+        </div>
+        <div class="feature">
+          <span class="icon">🔓</span>
+          <h3>Open source, MIT</h3>
+          <p>Fork it, extend it, self-host it. Built explicitly to be a citable reference for African agritech research.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="api">
+    <div class="container">
+      <p class="eyebrow">REST API</p>
+      <h2>Seven endpoints, one well-documented surface.</h2>
+      <p class="sub">
+        The backend ships with auto-generated Swagger UI at <code>/docs</code> and Redoc at <code>/redoc</code>.
+        All endpoints return JSON; all input is validated by Pydantic v2.
+      </p>
+      <div class="endpoint-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th><th>Endpoint</th><th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code class="method get">GET</code></td><td><code class="path">/</code></td><td>Service metadata, version, author</td></tr>
+            <tr><td><code class="method post">POST</code></td><td><code class="path">/predict</code></td><td>Run AI yield prediction on farm data</td></tr>
+            <tr><td><code class="method get">GET</code></td><td><code class="path">/regions</code></td><td>All 36 Nigerian states + FCT, grouped by zone</td></tr>
+            <tr><td><code class="method get">GET</code></td><td><code class="path">/crops</code></td><td>Supported crops with agronomic profile</td></tr>
+            <tr><td><code class="method get">GET</code></td><td><code class="path">/seasons/current</code></td><td>Current Nigerian farming season</td></tr>
+            <tr><td><code class="method get">GET</code></td><td><code class="path">/insights/regional-summary</code></td><td>Yield benchmarks per geopolitical zone</td></tr>
+            <tr><td><code class="method get">GET</code></td><td><code class="path">/history</code></td><td>Recent server-side prediction history</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="privacy" style="background:var(--white)">
+    <div class="container">
+      <p class="eyebrow">Privacy Policy</p>
+      <h2>What AgriAI does — and does not — collect.</h2>
+      <p class="sub">
+        AgriAI is built around the principle that a farmer's data belongs to the farmer. This policy applies
+        to the AgriAI mobile application and the AgriAI backend API.
+      </p>
+
+      <div class="privacy">
+        <p class="meta"><strong>Effective date:</strong> 19 May 2026 · <strong>Maintainer:</strong> Juliet Chinenye Duru</p>
+
+        <h3>1. Information we collect</h3>
+        <ul>
+          <li><strong>Farm data you submit:</strong> state, crop, farm size in hectares, and optionally rainfall, fertilizer use, and soil quality.</li>
+          <li><strong>Prediction outputs:</strong> generated by our model from the inputs above.</li>
+          <li><strong>Anonymous technical logs:</strong> request timestamps and endpoint names for the purpose of reliability monitoring.</li>
+        </ul>
+
+        <h3>2. Information we do <em>not</em> collect</h3>
+        <ul>
+          <li>We do not collect your name, phone number, email address, or any other personal identifier.</li>
+          <li>We do not collect or store GPS coordinates.</li>
+          <li>We do not use third-party advertising trackers or analytics SDKs.</li>
+          <li>We do not sell, rent, or share farm data with brokers or marketers.</li>
+        </ul>
+
+        <h3>3. Where your data lives</h3>
+        <ul>
+          <li><strong>On your device:</strong> saved predictions are stored locally via AsyncStorage. Clearing the app's storage deletes them irreversibly.</li>
+          <li><strong>On the server:</strong> the most recent 500 anonymised predictions may be retained in memory for the rolling <code>/history</code> endpoint. No personally identifying fields are stored.</li>
+        </ul>
+
+        <h3>4. Your rights</h3>
+        <ul>
+          <li>You may clear the on-device history at any time from the <em>History</em> screen.</li>
+          <li>You may operate AgriAI entirely offline; no data leaves your device unless you submit a prediction request.</li>
+          <li>You may self-host the backend — the source code is open under the MIT licence — to retain full control of any data you generate.</li>
+        </ul>
+
+        <h3>5. Children's privacy</h3>
+        <p>AgriAI is intended for use by adults engaged in agricultural decision-making. It is not directed at children under 13, and we do not knowingly collect data from them.</p>
+
+        <h3>6. Changes to this policy</h3>
+        <p>Material changes will be published on this page with a new effective date and announced in the project's GitHub repository release notes.</p>
+
+        <h3>7. Contact</h3>
+        <p>
+          Questions or data requests:
+          <a href="mailto:durujulietchinenye@gmail.com">durujulietchinenye@gmail.com</a>
+          · GitHub issues: <a href="https://github.com/JulietChinenyeDuru/agriAI-insights/issues" target="_blank" rel="noopener">JulietChinenyeDuru/agriAI-insights</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container footer-inner">
+      <div>
+        © 2026 <strong>Juliet Chinenye Duru</strong> · Abia State University, Nigeria · MIT licensed
+      </div>
+      <div class="footer-links">
+        <a href="#privacy">Privacy</a>
+        <a href="https://github.com/JulietChinenyeDuru/agriAI-insights" target="_blank" rel="noopener">GitHub</a>
+        <a href="mailto:durujulietchinenye@gmail.com">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
