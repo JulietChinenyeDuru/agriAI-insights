@@ -1,0 +1,182 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  AgriAI Backend — FastAPI on AWS Lambda + API Gateway HTTP API.
+  Provisions: Lambda function (Python 3.12), IAM execution role,
+  API Gateway HTTP API with a $default catch-all route, and a
+  CloudWatch log group with configurable retention.
+
+Parameters:
+  ArtifactBucket:
+    Type: String
+    Description: S3 bucket that holds the deployment zip.
+
+  ArtifactKey:
+    Type: String
+    Default: agriai-backend.zip
+    Description: S3 object key of the deployment zip.
+
+  ArtifactVersion:
+    Type: String
+    Description: >
+      S3 object version ID — updated on every upload so CloudFormation
+      always detects a change and re-deploys the Lambda code.
+
+  FunctionMemoryMB:
+    Type: Number
+    Default: 256
+    AllowedValues: [128, 256, 512, 1024]
+    Description: Lambda memory allocation in MB.
+
+  FunctionTimeoutSec:
+    Type: Number
+    Default: 30
+    MinValue: 5
+    MaxValue: 60
+    Description: Lambda function timeout in seconds.
+
+  LogRetentionDays:
+    Type: Number
+    Default: 14
+    AllowedValues: [1, 3, 5, 7, 14, 30, 60, 90]
+    Description: CloudWatch log retention period in days.
+
+Resources:
+
+  # ── IAM execution role ────────────────────────────────────────────────────────
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${AWS::StackName}-lambda-role'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Tags:
+        - Key: Project
+          Value: AgriAI
+        - Key: ManagedBy
+          Value: CloudFormation
+        - Key: Owner
+          Value: Juliet-Chinenye-Duru
+
+  # ── CloudWatch log group (created before the function to control retention) ───
+  LambdaLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/lambda/${AWS::StackName}-api'
+      RetentionInDays: !Ref LogRetentionDays
+
+  # ── Lambda function ───────────────────────────────────────────────────────────
+  BackendFunction:
+    Type: AWS::Lambda::Function
+    DependsOn: LambdaLogGroup
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-api'
+      Description: AgriAI FastAPI backend — yield predictions for Nigerian farmers
+      Runtime: python3.12
+      # Zip layout: src/main.py at root of archive alongside pip packages.
+      # Mangum exposes `handler` at module level — see src/main.py.
+      Handler: src.main.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        S3Bucket: !Ref ArtifactBucket
+        S3Key: !Ref ArtifactKey
+        S3ObjectVersion: !Ref ArtifactVersion
+      MemorySize: !Ref FunctionMemoryMB
+      Timeout: !Ref FunctionTimeoutSec
+      Environment:
+        Variables:
+          LOG_LEVEL: INFO
+      Tags:
+        Project: AgriAI
+        ManagedBy: CloudFormation
+        Owner: Juliet-Chinenye-Duru
+
+  # ── API Gateway HTTP API ──────────────────────────────────────────────────────
+  HttpApi:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: !Sub '${AWS::StackName}-api'
+      Description: AgriAI Backend HTTP API
+      ProtocolType: HTTP
+      # FastAPI's CORSMiddleware also handles CORS; this covers the API
+      # Gateway layer for clients that send pre-flight requests directly.
+      CorsConfiguration:
+        AllowOrigins:
+          - '*'
+        AllowMethods:
+          - GET
+          - POST
+          - OPTIONS
+        AllowHeaders:
+          - Content-Type
+          - Authorization
+        MaxAge: 300
+      Tags:
+        Project: AgriAI
+        ManagedBy: CloudFormation
+
+  DefaultStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref HttpApi
+      StageName: '$default'
+      AutoDeploy: true
+
+  LambdaIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref HttpApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub
+        - 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${FunctionArn}/invocations'
+        - FunctionArn: !GetAtt BackendFunction.Arn
+      # Payload format 2.0 matches Mangum's default detection logic.
+      PayloadFormatVersion: '2.0'
+
+  CatchAllRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: '$default'
+      Target: !Sub 'integrations/${LambdaIntegration}'
+
+  LambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt BackendFunction.Arn
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*/*'
+
+Outputs:
+  ApiUrl:
+    Description: >
+      API Gateway base URL — set this as EXPO_PUBLIC_AGRIAI_API_URL in the
+      mobile app to point at the deployed backend.
+    Value: !Sub 'https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com'
+    Export:
+      Name: !Sub '${AWS::StackName}-ApiUrl'
+
+  FunctionName:
+    Description: Lambda function name
+    Value: !Ref BackendFunction
+    Export:
+      Name: !Sub '${AWS::StackName}-FunctionName'
+
+  FunctionArn:
+    Description: Lambda function ARN
+    Value: !GetAtt BackendFunction.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-FunctionArn'
+
+  LogGroupName:
+    Description: CloudWatch log group for Lambda function logs
+    Value: !Ref LambdaLogGroup
+    Export:
+      Name: !Sub '${AWS::StackName}-LogGroup'

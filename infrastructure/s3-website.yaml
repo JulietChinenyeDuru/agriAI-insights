@@ -1,0 +1,91 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  AgriAI Insights — static website hosted on Amazon S3.
+  Provisions a public-read S3 bucket with website hosting enabled,
+  attaches the corresponding bucket policy, and exports the website URL.
+
+Parameters:
+  BucketName:
+    Type: String
+    Default: agriai-insights-website
+    AllowedPattern: '^[a-z0-9.\-]{3,63}$'
+    ConstraintDescription: >
+      Bucket name must be 3-63 characters, all lowercase, and contain
+      only letters, numbers, hyphens, or periods. Names are globally
+      unique across all AWS accounts.
+    Description: Globally-unique S3 bucket name.
+
+  IndexDocument:
+    Type: String
+    Default: index.html
+    Description: Object key served at the bucket root.
+
+  ErrorDocument:
+    Type: String
+    Default: index.html
+    Description: >
+      Object key served on 4xx errors. Defaulting to index.html gives
+      SPA-style routing (every path falls back to the landing page).
+
+Resources:
+  WebsiteBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Ref BucketName
+      WebsiteConfiguration:
+        IndexDocument: !Ref IndexDocument
+        ErrorDocument: !Ref ErrorDocument
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      PublicAccessBlockConfiguration:
+        # Public read of website objects requires these to be false.
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+      CorsConfiguration:
+        CorsRules:
+          - AllowedMethods: [GET, HEAD]
+            AllowedOrigins: ['*']
+            AllowedHeaders: ['*']
+            MaxAge: 3000
+      Tags:
+        - Key: Project
+          Value: AgriAI-Insights
+        - Key: ManagedBy
+          Value: CloudFormation
+        - Key: Owner
+          Value: Juliet-Chinenye-Duru
+
+  WebsiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref WebsiteBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: PublicReadGetObject
+            Effect: Allow
+            Principal: '*'
+            Action: s3:GetObject
+            Resource: !Sub 'arn:${AWS::Partition}:s3:::${WebsiteBucket}/*'
+
+Outputs:
+  WebsiteURL:
+    Description: Public S3 website endpoint
+    Value: !GetAtt WebsiteBucket.WebsiteURL
+    Export:
+      Name: !Sub '${AWS::StackName}-WebsiteURL'
+
+  BucketName:
+    Description: Name of the S3 bucket
+    Value: !Ref WebsiteBucket
+    Export:
+      Name: !Sub '${AWS::StackName}-BucketName'
+
+  BucketDomainName:
+    Description: Regional domain name (useful for CloudFront origins)
+    Value: !GetAtt WebsiteBucket.RegionalDomainName

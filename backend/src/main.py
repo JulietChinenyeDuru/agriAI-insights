@@ -11,6 +11,7 @@ from uuid import uuid4
 
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
+from mangum import Mangum
 from pydantic import BaseModel, Field, field_validator
 
 app = FastAPI(
@@ -290,3 +291,9 @@ def get_history(limit: int = 50):
         "count": len(_prediction_history),
         "predictions": list(reversed(_prediction_history))[:limit],
     }
+
+
+# Lambda entry point — Mangum translates API Gateway HTTP API (payload v2.0)
+# events into ASGI requests that FastAPI can handle.
+# Note: _prediction_history is in-memory and resets on each Lambda cold start.
+handler = Mangum(app, lifespan="off")

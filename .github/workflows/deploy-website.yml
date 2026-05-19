@@ -1,0 +1,104 @@
+name: Deploy AgriAI website to S3
+
+# Auto-deploys the static website to S3 whenever the docs/ folder changes
+# on the main branch. Can also be run manually via the Actions tab.
+#
+# Required repository secrets:
+#   AWS_ACCESS_KEY_ID
+#   AWS_SECRET_ACCESS_KEY
+#
+# Optional repository variable:
+#   AWS_REGION  (default: eu-west-2)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'infrastructure/s3-website.yaml'
+      - 'scripts/deploy-website.sh'
+      - '.github/workflows/deploy-website.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-website-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to S3
+    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION || 'eu-west-2' }}
+      STACK_NAME: agriai-insights-website
+      BUCKET_NAME: agriai-insights-website
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Validate CloudFormation template
+        run: |
+          aws cloudformation validate-template \
+            --template-body file://infrastructure/s3-website.yaml \
+            --region "${AWS_REGION}"
+
+      - name: Deploy CloudFormation stack
+        run: |
+          aws cloudformation deploy \
+            --stack-name "${STACK_NAME}" \
+            --template-file infrastructure/s3-website.yaml \
+            --parameter-overrides "BucketName=${BUCKET_NAME}" \
+            --region "${AWS_REGION}" \
+            --no-fail-on-empty-changeset
+
+      - name: Sync docs/ to S3
+        run: |
+          aws s3 sync docs/ "s3://${BUCKET_NAME}/" \
+            --region "${AWS_REGION}" \
+            --delete \
+            --exclude ".DS_Store" \
+            --exclude "*.map" \
+            --cache-control "public, max-age=300"
+
+          aws s3 cp docs/index.html "s3://${BUCKET_NAME}/index.html" \
+            --region "${AWS_REGION}" \
+            --content-type "text/html; charset=utf-8" \
+            --cache-control "no-cache, max-age=0" \
+            --metadata-directive REPLACE
+
+      - name: Resolve website URL
+        id: url
+        run: |
+          URL=$(aws cloudformation describe-stacks \
+            --stack-name "${STACK_NAME}" \
+            --region "${AWS_REGION}" \
+            --query "Stacks[0].Outputs[?OutputKey=='WebsiteURL'].OutputValue" \
+            --output text)
+          echo "website_url=${URL}" >> "$GITHUB_OUTPUT"
+          echo "🌍 Live at: ${URL}"
+
+      - name: Publish job summary
+        run: |
+          {
+            echo "## 🌍 AgriAI website deployed"
+            echo ""
+            echo "**Live URL:** ${{ steps.url.outputs.website_url }}"
+            echo ""
+            echo "| Setting        | Value                              |"
+            echo "| -------------- | ---------------------------------- |"
+            echo "| Stack          | \`${STACK_NAME}\`                   |"
+            echo "| Bucket         | \`${BUCKET_NAME}\`                  |"
+            echo "| Region         | \`${AWS_REGION}\`                   |"
+            echo "| Triggering ref | \`${GITHUB_REF_NAME}\`              |"
+            echo "| Commit         | \`${GITHUB_SHA::7}\`                |"
+          } >> "$GITHUB_STEP_SUMMARY"
