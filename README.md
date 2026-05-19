@@ -9,7 +9,7 @@
 [![React Native](https://img.shields.io/badge/React_Native-0.74-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactnative.dev/)
 [![AWS](https://img.shields.io/badge/AWS-eu--west--2-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)](https://aws.amazon.com/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
+
 
 [Problem](#-the-problem) · [Architecture](#-system-architecture) · [API](#-api-reference) · [Install](#-installation) · [Impact](#-real-world-impact) · [Research](#-research--academic-context) · [Roadmap](#-roadmap)
 
