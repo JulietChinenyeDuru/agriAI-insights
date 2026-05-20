@@ -2,13 +2,16 @@
   "expo": {
     "name": "AgriAI",
     "slug": "agriai-insights",
-    "owner": "julietchinenyeduru",
+    "owner": "durujulietchinenye",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "primaryColor": "#2E7D32",
     "scheme": "agriai",
-    "platforms": ["android", "ios"],
+    "platforms": [
+      "android",
+      "ios"
+    ],
     "splash": {
       "backgroundColor": "#2E7D32",
       "resizeMode": "contain"
@@ -19,7 +22,9 @@
       "adaptiveIcon": {
         "backgroundColor": "#2E7D32"
       },
-      "permissions": ["INTERNET"]
+      "permissions": [
+        "INTERNET"
+      ]
     },
     "ios": {
       "bundleIdentifier": "com.julietchinenyeduru.agriai",
@@ -28,8 +33,14 @@
     },
     "extra": {
       "eas": {
-        "projectId": "00000000-0000-0000-0000-000000000000"
+        "projectId": "dc60dfcf-082e-499b-98a0-142f4307ff95"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/dc60dfcf-082e-499b-98a0-142f4307ff95"
     }
   }
 }
