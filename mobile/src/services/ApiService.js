@@ -5,7 +5,7 @@
  * The base URL can be overridden via the EXPO_PUBLIC_AGRIAI_API_URL env var,
  * which Expo exposes to JavaScript at build time.
  */
-const DEFAULT_BASE_URL = 'http://localhost:8000';
+const DEFAULT_BASE_URL = 'https://urr6s98icd.execute-api.eu-west-1.amazonaws.com';
 const BASE_URL =
   (typeof process !== 'undefined' && process.env && process.env.EXPO_PUBLIC_AGRIAI_API_URL) ||
   DEFAULT_BASE_URL;
