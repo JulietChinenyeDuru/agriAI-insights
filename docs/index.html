@@ -409,9 +409,9 @@
       <p class="eyebrow">Live Demo</p>
       <h2>Try the AI prediction engine.</h2>
       <p class="sub">
-        Enter your farm details below and get an instant yield estimate. Requires the
-        AgriAI backend running locally at <code>http://127.0.0.1:8000</code> or point it at the
-        <a href="https://urr6s98icd.execute-api.eu-west-1.amazonaws.com/docs" target="_blank" rel="noopener">deployed API</a>.
+        Enter your farm details below and get an instant yield estimate powered by the
+        <a href="https://urr6s98icd.execute-api.eu-west-1.amazonaws.com/docs" target="_blank" rel="noopener">live AgriAI API</a>
+        running on AWS Lambda.
       </p>
 
       <div class="demo-grid">
@@ -609,7 +609,7 @@
   </footer>
 
   <script>
-    const API_URL = 'http://127.0.0.1:8000/predict';
+    const API_URL = 'https://urr6s98icd.execute-api.eu-west-1.amazonaws.com/predict';
 
     document.getElementById('predictForm').addEventListener('submit', async function (e) {
       e.preventDefault();
@@ -664,7 +664,7 @@
         resultCard.className = 'demo-result-card visible';
       } catch (err) {
         errorEl.textContent = err.message.includes('fetch')
-          ? 'Could not reach the API. Make sure the backend is running at http://127.0.0.1:8000.'
+          ? 'Could not reach the AgriAI API. Check your connection and try again.'
           : 'Error: ' + err.message;
         errorEl.className = 'demo-error visible';
       } finally {
