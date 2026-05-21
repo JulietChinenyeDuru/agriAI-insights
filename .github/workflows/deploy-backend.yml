@@ -1,0 +1,97 @@
+name: Deploy AgriAI backend to Lambda
+
+# Auto-deploys the FastAPI backend to AWS Lambda (eu-west-1) whenever the
+# backend/ folder, Lambda CloudFormation template, or deploy script changes
+# on the main branch. Can also be run manually via the Actions tab.
+#
+# Required repository secrets:
+#   AWS_ACCESS_KEY_ID
+#   AWS_SECRET_ACCESS_KEY
+#
+# Optional repository variable:
+#   AWS_REGION  (default: eu-west-1)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - 'infrastructure/lambda.yaml'
+      - 'scripts/deploy-backend.sh'
+      - '.github/workflows/deploy-backend.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-backend-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to Lambda
+    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION || 'eu-west-1' }}
+      STACK_NAME: agriai-backend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install zip
+        run: sudo apt-get install -y zip
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Validate CloudFormation template
+        run: |
+          aws cloudformation validate-template \
+            --template-body file://infrastructure/lambda.yaml \
+            --region "${AWS_REGION}"
+
+      - name: Deploy backend
+        run: bash scripts/deploy-backend.sh
+
+      - name: Resolve API URL
+        id: api
+        run: |
+          URL=$(aws cloudformation describe-stacks \
+            --stack-name "${STACK_NAME}" \
+            --region "${AWS_REGION}" \
+            --query "Stacks[0].Outputs[?OutputKey=='ApiUrl'].OutputValue" \
+            --output text)
+          FUNCTION=$(aws cloudformation describe-stacks \
+            --stack-name "${STACK_NAME}" \
+            --region "${AWS_REGION}" \
+            --query "Stacks[0].Outputs[?OutputKey=='FunctionName'].OutputValue" \
+            --output text)
+          echo "api_url=${URL}" >> "$GITHUB_OUTPUT"
+          echo "function_name=${FUNCTION}" >> "$GITHUB_OUTPUT"
+
+      - name: Publish job summary
+        run: |
+          {
+            echo "## AgriAI backend deployed"
+            echo ""
+            echo "**API URL:** ${{ steps.api.outputs.api_url }}"
+            echo ""
+            echo "| Setting        | Value                              |"
+            echo "| -------------- | ---------------------------------- |"
+            echo "| Stack          | \`${STACK_NAME}\`                   |"
+            echo "| Function       | \`${{ steps.api.outputs.function_name }}\` |"
+            echo "| Region         | \`${AWS_REGION}\`                   |"
+            echo "| Triggering ref | \`${GITHUB_REF_NAME}\`              |"
+            echo "| Commit         | \`${GITHUB_SHA::7}\`                |"
+          } >> "$GITHUB_STEP_SUMMARY"

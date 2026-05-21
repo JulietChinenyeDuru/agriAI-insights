@@ -1,0 +1,72 @@
+name: OTA update mobile app
+
+# Publishes an over-the-air JavaScript bundle update to all production devices
+# via EAS Update whenever the mobile/src/ folder changes on main.
+# Native code changes (new packages, app.json changes) still require a full
+# EAS build — this workflow only handles JS-layer changes.
+#
+# Required repository secrets:
+#   EXPO_TOKEN   — personal access token from expo.dev/settings/access-tokens
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'mobile/src/**'
+      - '.github/workflows/deploy-mobile.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-mobile-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  ota-update:
+    name: EAS OTA update (production)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: mobile/package-lock.json
+
+      - name: Install dependencies
+        working-directory: mobile
+        run: npm ci
+
+      - name: Install EAS CLI
+        run: npm install --global eas-cli
+
+      - name: Publish OTA update
+        working-directory: mobile
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          eas update \
+            --branch production \
+            --message "ci: ${GITHUB_SHA::7} — ${{ github.event.head_commit.message }}" \
+            --non-interactive
+
+      - name: Publish job summary
+        run: |
+          {
+            echo "## Mobile OTA update published"
+            echo ""
+            echo "All devices on the **production** channel will receive this update"
+            echo "the next time they open the app."
+            echo ""
+            echo "| Setting        | Value                              |"
+            echo "| -------------- | ---------------------------------- |"
+            echo "| Branch         | \`production\`                      |"
+            echo "| Triggering ref | \`${GITHUB_REF_NAME}\`              |"
+            echo "| Commit         | \`${GITHUB_SHA::7}\`                |"
+          } >> "$GITHUB_STEP_SUMMARY"
