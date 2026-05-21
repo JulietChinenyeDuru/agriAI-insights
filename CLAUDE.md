@@ -59,6 +59,38 @@ bash scripts/deploy-website.sh
 AWS_REGION=eu-west-1 STACK_NAME=agriai-backend-staging bash scripts/deploy-backend.sh
 ```
 
+### Manual API testing
+
+```bash
+# Test the predict endpoint locally (start uvicorn first)
+curl -X POST http://127.0.0.1:8000/predict \
+  -H "Content-Type: application/json" \
+  -d '{
+    "region": "Enugu",
+    "crop_type": "Maize",
+    "rainfall_mm": 120,
+    "temperature_celsius": 28,
+    "humidity_percent": 70,
+    "fertilizer_kg": 50,
+    "soil_ph": 6.5,
+    "farm_size_hectares": 2
+  }'
+
+# Same request against the deployed Lambda
+curl -X POST https://urr6s98icd.execute-api.eu-west-1.amazonaws.com/predict \
+  -H "Content-Type: application/json" \
+  -d '{
+    "region": "Enugu",
+    "crop_type": "Maize",
+    "rainfall_mm": 120,
+    "temperature_celsius": 28,
+    "humidity_percent": 70,
+    "fertilizer_kg": 50,
+    "soil_ph": 6.5,
+    "farm_size_hectares": 2
+  }'
+```
+
 ### CloudFormation
 
 ```bash
@@ -138,4 +170,12 @@ The Lambda stack uses API Gateway **HTTP API (v2)** with payload format 2.0, whi
 
 ### CI/CD
 
-`.github/workflows/deploy-website.yml` auto-deploys `docs/` to S3 on pushes to `main` that touch `docs/**` or the website infrastructure files. Requires repository secrets `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`. No equivalent CI workflow exists yet for the Lambda backend.
+Three GitHub Actions workflows run on pushes to `main`:
+
+| Workflow | Trigger paths | What it does |
+|---|---|---|
+| `deploy-website.yml` | `docs/**`, `infrastructure/s3-website.yaml` | Syncs `docs/` to S3 |
+| `deploy-backend.yml` | `backend/**`, `infrastructure/lambda.yaml` | Packages and deploys Lambda via CloudFormation |
+| `deploy-mobile.yml` | `mobile/src/**` | Publishes EAS OTA update to the production channel |
+
+All three require `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` repository secrets; the mobile workflow additionally requires `EXPO_TOKEN`.

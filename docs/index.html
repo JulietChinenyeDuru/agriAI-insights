@@ -183,10 +183,91 @@
     }
     .footer-links a { margin-left: 16px; color: var(--ink-700); }
 
+    /* Prediction demo */
+    .demo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    .demo-form-card, .demo-result-card {
+      background: var(--white); border-radius: var(--radius);
+      padding: 28px; box-shadow: var(--shadow-sm); border: 1px solid #DCEDC8;
+    }
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block; font-size: 13px; font-weight: 600;
+      color: var(--green-900); margin-bottom: 6px;
+    }
+    .form-group select,
+    .form-group input[type="number"] {
+      width: 100%; padding: 10px 12px; border-radius: 8px;
+      border: 1.5px solid #C5E1A5; background: var(--green-050);
+      font-family: inherit; font-size: 14.5px; color: var(--ink-900);
+      appearance: none; outline: none; transition: border-color .15s;
+    }
+    .form-group select:focus,
+    .form-group input[type="number"]:focus {
+      border-color: var(--green-600); background: var(--white);
+    }
+    .form-group .hint { font-size: 12px; color: var(--ink-500); margin-top: 4px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .btn-predict {
+      width: 100%; padding: 13px; border-radius: 10px;
+      background: var(--green-800); color: var(--white);
+      border: none; font-family: inherit; font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: background .15s, transform .12s;
+      margin-top: 4px;
+    }
+    .btn-predict:hover:not(:disabled) { background: var(--green-900); transform: translateY(-1px); }
+    .btn-predict:disabled { opacity: .65; cursor: not-allowed; transform: none; }
+    .demo-result-card { display: none; }
+    .demo-result-card.visible { display: block; }
+    .result-metric {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 14px 0; border-bottom: 1px solid #ECEFF1;
+    }
+    .result-metric:last-child { border-bottom: none; padding-bottom: 0; }
+    .result-metric .icon {
+      width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+      background: var(--green-100); color: var(--green-800);
+      display: inline-flex; align-items: center; justify-content: center; font-size: 20px;
+    }
+    .result-metric .val { font-size: 22px; font-weight: 800; color: var(--green-900); letter-spacing: -0.02em; }
+    .result-metric .lbl { font-size: 12px; color: var(--ink-500); font-weight: 600; text-transform: uppercase; letter-spacing: .6px; }
+    .result-metric .sub-val { font-size: 13px; color: var(--ink-700); margin-top: 2px; }
+    .confidence-bar-wrap { margin-top: 4px; }
+    .confidence-bar {
+      height: 6px; border-radius: 999px; background: #DCEDC8; overflow: hidden;
+    }
+    .confidence-bar-fill { height: 100%; border-radius: 999px; background: var(--green-600); transition: width .6s ease; }
+    .recommendation-box {
+      margin-top: 16px; padding: 14px 16px; border-radius: 10px;
+      background: var(--green-050); border: 1px solid #C5E1A5;
+      font-size: 14px; color: var(--ink-700); line-height: 1.55;
+    }
+    .recommendation-box strong { display: block; color: var(--green-900); margin-bottom: 4px; font-size: 13px; text-transform: uppercase; letter-spacing: .6px; }
+    .demo-error {
+      display: none; margin-top: 12px; padding: 12px 14px; border-radius: 8px;
+      background: #FFF3E0; border: 1px solid #FFCC80;
+      font-size: 13.5px; color: #E65100;
+    }
+    .demo-error.visible { display: block; }
+    .result-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .result-header h3 { margin: 0; font-size: 16px; color: var(--green-900); }
+    .result-badge {
+      font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 999px;
+      background: var(--green-100); color: var(--green-800); text-transform: uppercase; letter-spacing: .5px;
+    }
+
+    @media (max-width: 860px) {
+      .demo-grid { grid-template-columns: 1fr; }
+    }
     @media (max-width: 640px) {
       nav.links { display: none; }
       .hero { padding: 56px 0 40px; }
       section { padding: 48px 0; }
+      .form-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -201,6 +282,7 @@
         <a href="#problem">Problem</a>
         <a href="#features">Features</a>
         <a href="#api">API</a>
+        <a href="#demo">Try It</a>
         <a href="#privacy">Privacy</a>
         <a href="https://github.com/JulietChinenyeDuru/agriAI-insights" target="_blank" rel="noopener">GitHub ↗</a>
       </nav>
@@ -322,7 +404,142 @@
     </div>
   </section>
 
-  <section id="privacy" style="background:var(--white)">
+  <section id="demo" style="background:var(--white)">
+    <div class="container">
+      <p class="eyebrow">Live Demo</p>
+      <h2>Try the AI prediction engine.</h2>
+      <p class="sub">
+        Enter your farm details below and get an instant yield estimate. Requires the
+        AgriAI backend running locally at <code>http://127.0.0.1:8000</code> or point it at the
+        <a href="https://urr6s98icd.execute-api.eu-west-1.amazonaws.com/docs" target="_blank" rel="noopener">deployed API</a>.
+      </p>
+
+      <div class="demo-grid">
+
+        <!-- Form -->
+        <div class="demo-form-card">
+          <form id="predictForm">
+            <div class="form-group">
+              <label for="state">Nigerian State</label>
+              <select id="state" name="state" required>
+                <option value="" disabled selected>Select a state…</option>
+                <optgroup label="North-West">
+                  <option>Jigawa</option><option>Kaduna</option><option>Kano</option>
+                  <option>Katsina</option><option>Kebbi</option><option>Sokoto</option>
+                  <option>Zamfara</option>
+                </optgroup>
+                <optgroup label="North-East">
+                  <option>Adamawa</option><option>Bauchi</option><option>Borno</option>
+                  <option>Gombe</option><option>Taraba</option><option>Yobe</option>
+                </optgroup>
+                <optgroup label="North-Central">
+                  <option>Benue</option><option>FCT</option><option>Kogi</option>
+                  <option>Kwara</option><option>Nasarawa</option><option>Niger</option>
+                  <option>Plateau</option>
+                </optgroup>
+                <optgroup label="South-West">
+                  <option>Ekiti</option><option>Lagos</option><option>Ogun</option>
+                  <option>Ondo</option><option>Osun</option><option>Oyo</option>
+                </optgroup>
+                <optgroup label="South-East">
+                  <option>Abia</option><option>Anambra</option><option>Ebonyi</option>
+                  <option>Enugu</option><option>Imo</option>
+                </optgroup>
+                <optgroup label="South-South">
+                  <option>Akwa Ibom</option><option>Bayelsa</option><option>Cross River</option>
+                  <option>Delta</option><option>Edo</option><option>Rivers</option>
+                </optgroup>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="crop">Crop Type</label>
+              <select id="crop" name="crop" required>
+                <option value="" disabled selected>Select a crop…</option>
+                <option value="cassava">Cassava</option>
+                <option value="cocoa">Cocoa</option>
+                <option value="groundnut">Groundnut</option>
+                <option value="maize">Maize</option>
+                <option value="millet">Millet</option>
+                <option value="plantain">Plantain</option>
+                <option value="rice">Rice</option>
+                <option value="sorghum">Sorghum</option>
+                <option value="tomato">Tomato</option>
+                <option value="yam">Yam</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="farm_size">Farm Size (ha)</label>
+                <input type="number" id="farm_size" name="farm_size" min="0.1" max="10000" step="0.1" placeholder="e.g. 2" required />
+              </div>
+              <div class="form-group">
+                <label for="soil_quality">Soil Quality</label>
+                <select id="soil_quality" name="soil_quality">
+                  <option value="medium" selected>Medium</option>
+                  <option value="good">Good</option>
+                  <option value="poor">Poor</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="rainfall">Rainfall (mm)</label>
+                <input type="number" id="rainfall" name="rainfall" min="0" max="5000" step="1" placeholder="e.g. 1200" />
+                <div class="hint">Leave blank to use zone average</div>
+              </div>
+              <div class="form-group">
+                <label for="fertilizer">Fertilizer (kg/ha)</label>
+                <input type="number" id="fertilizer" name="fertilizer" min="0" max="1000" step="1" placeholder="e.g. 50" />
+                <div class="hint">Leave blank to use no fertilizer</div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-predict" id="predictBtn">Get AI Prediction</button>
+            <div class="demo-error" id="demoError"></div>
+          </form>
+        </div>
+
+        <!-- Results -->
+        <div class="demo-result-card" id="resultCard">
+          <div class="result-header">
+            <h3>Prediction Result</h3>
+            <span class="result-badge" id="resultRegion"></span>
+          </div>
+
+          <div class="result-metric">
+            <span class="icon">🌾</span>
+            <div>
+              <div class="lbl">Total Yield</div>
+              <div class="val" id="rTotalYield">—</div>
+              <div class="sub-val" id="rYieldPerHa"></div>
+            </div>
+          </div>
+
+          <div class="result-metric">
+            <span class="icon">🎯</span>
+            <div style="flex:1">
+              <div class="lbl">Confidence</div>
+              <div class="val" id="rConfidence">—</div>
+              <div class="confidence-bar-wrap">
+                <div class="confidence-bar"><div class="confidence-bar-fill" id="rConfBar" style="width:0%"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="recommendation-box">
+            <strong>Top Recommendation</strong>
+            <span id="rRecommendation"></span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="privacy" style="background:var(--green-050)">
     <div class="container">
       <p class="eyebrow">Privacy Policy</p>
       <h2>What AgriAI does — and does not — collect.</h2>
@@ -391,5 +608,70 @@
     </div>
   </footer>
 
+  <script>
+    const API_URL = 'http://127.0.0.1:8000/predict';
+
+    document.getElementById('predictForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const btn = document.getElementById('predictBtn');
+      const errorEl = document.getElementById('demoError');
+      const resultCard = document.getElementById('resultCard');
+
+      btn.disabled = true;
+      btn.textContent = 'Running prediction…';
+      errorEl.className = 'demo-error';
+      resultCard.className = 'demo-result-card';
+
+      const rainfall = document.getElementById('rainfall').value;
+      const fertilizer = document.getElementById('fertilizer').value;
+
+      const body = {
+        state: document.getElementById('state').value,
+        crop: document.getElementById('crop').value,
+        farm_size_hectares: parseFloat(document.getElementById('farm_size').value),
+        soil_quality: document.getElementById('soil_quality').value,
+      };
+      if (rainfall !== '') body.rainfall_mm = parseFloat(rainfall);
+      if (fertilizer !== '') body.fertilizer_kg_per_ha = parseFloat(fertilizer);
+
+      try {
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.detail || `HTTP ${res.status}`);
+        }
+
+        const data = await res.json();
+
+        document.getElementById('resultRegion').textContent = data.region;
+        document.getElementById('rTotalYield').textContent =
+          data.predicted_yield_tonnes.toFixed(2) + ' t';
+        document.getElementById('rYieldPerHa').textContent =
+          data.predicted_yield_per_hectare.toFixed(2) + ' t/ha · ' +
+          data.farm_size_hectares + ' ha · ' +
+          data.crop.charAt(0).toUpperCase() + data.crop.slice(1);
+        const pct = Math.round(data.confidence * 100);
+        document.getElementById('rConfidence').textContent = pct + '%';
+        document.getElementById('rConfBar').style.width = pct + '%';
+        document.getElementById('rRecommendation').textContent = data.recommendation;
+
+        resultCard.className = 'demo-result-card visible';
+      } catch (err) {
+        errorEl.textContent = err.message.includes('fetch')
+          ? 'Could not reach the API. Make sure the backend is running at http://127.0.0.1:8000.'
+          : 'Error: ' + err.message;
+        errorEl.className = 'demo-error visible';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Get AI Prediction';
+      }
+    });
+  </script>
 </body>
 </html>
