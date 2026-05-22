@@ -18,7 +18,7 @@
     },
     "android": {
       "package": "com.julietchinenyeduru.agriai",
-      "versionCode": 3,
+      "versionCode": 4,
       "targetSdkVersion": 35,
       "compileSdkVersion": 35,
       "adaptiveIcon": {
