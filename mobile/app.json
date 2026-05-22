@@ -18,8 +18,9 @@
     },
     "android": {
       "package": "com.julietchinenyeduru.agriai",
-      "versionCode": 2,
+      "versionCode": 3,
       "targetSdkVersion": 35,
+      "compileSdkVersion": 35,
       "adaptiveIcon": {
         "backgroundColor": "#2E7D32"
       },
