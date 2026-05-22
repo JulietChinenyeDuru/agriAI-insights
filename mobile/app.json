@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "AgriAI",
+    "name": "AgriAI Insights",
     "slug": "agriai-insights",
     "owner": "durujulietchinenye",
     "version": "1.0.0",
@@ -18,7 +18,7 @@
     },
     "android": {
       "package": "com.julietchinenyeduru.agriai",
-      "versionCode": 5,
+      "versionCode": 6,
       "targetSdkVersion": 35,
       "compileSdkVersion": 35,
       "adaptiveIcon": {
