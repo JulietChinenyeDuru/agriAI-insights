@@ -9,9 +9,10 @@ AgriAI AI Yield Intelligence for Nigerian Farmers
 [![React Native](https://img.shields.io/badge/React_Native-0.74-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactnative.dev/)
 [![AWS](https://img.shields.io/badge/AWS-eu--west--2-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)](https://aws.amazon.com/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Live App](https://img.shields.io/badge/Live_App-Netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://agriai-insight.netlify.app)
 
 
-[Problem](#-the-problem) · [Architecture](#-system-architecture) · [API](#-api-reference) · [Install](#-installation) · [Impact](#-real-world-impact) · [Research](#-research--academic-context) · [Roadmap](#-roadmap)
+[Live App](https://agriai-insight.netlify.app) · [Problem](#-the-problem) · [Architecture](#-system-architecture) · [API](#-api-reference) · [Install](#-installation) · [Impact](#-real-world-impact) · [Research](#-research--academic-context) · [Roadmap](#-roadmap)
 
 </div>
 
