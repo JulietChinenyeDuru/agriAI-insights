@@ -7,6 +7,7 @@ Observability stack for the AgriAI backend API (FastAPI on AWS Lambda).
 | **Prometheus** | Metrics scrape & alerting | 9090 |
 | **Grafana** | Dashboards & visualisation | 3000 |
 | **Zipkin** | Distributed request tracing | 9411 |
+| **UptimeRobot** | External uptime monitoring & webhook alerts | — (cloud) |
 
 ---
 
@@ -39,6 +40,9 @@ monitoring/
 │       └── agriai-dashboard.json   # pre-built AgriAI dashboard
 ├── zipkin/
 │   └── tracing.py       # OpenTelemetry → Zipkin exporter for FastAPI
+├── uptimerobot/
+│   ├── README.md        # UptimeRobot setup guide
+│   └── webhook_handler.py  # FastAPI router — receives up/down alerts
 └── docker/
     └── docker-compose.yml
 ```
@@ -90,6 +94,36 @@ pip install prometheus-client
 
 Push from the Lambda handler after each request, or use a scheduled EventBridge rule
 to flush aggregated metrics every minute.
+
+---
+
+## UptimeRobot (external uptime monitoring)
+
+UptimeRobot checks the API and Netlify web app every 5 minutes from outside AWS
+and fires a webhook when a monitor goes down or recovers.
+
+| Monitor | URL |
+|---|---|
+| AgriAI API | `https://urr6s98icd.execute-api.eu-west-1.amazonaws.com/` |
+| AgriAI Web App | `https://agriai-insight.netlify.app` |
+
+### 3 — Add UptimeRobot webhook handler
+
+Mount the router on the existing backend (`main.py`):
+
+```python
+from src.uptimerobot import router as uptimerobot_router
+app.include_router(uptimerobot_router)
+```
+
+Set the env vars:
+
+```bash
+UPTIMEROBOT_SECRET=<secret-from-uptimerobot-settings>
+PUSHGATEWAY_URL=http://localhost:9091   # optional — pushes agriai_monitor_up to Grafana
+```
+
+See `uptimerobot/README.md` for the full UptimeRobot dashboard setup and `curl` test commands.
 
 ---
 
