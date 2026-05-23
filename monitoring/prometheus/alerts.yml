@@ -1,0 +1,69 @@
+groups:
+  - name: agriai-api
+    rules:
+      - alert: AgriAIHighErrorRate
+        expr: |
+          (
+            rate(http_requests_total{job="agriai-backend", status=~"5.."}[5m])
+            / rate(http_requests_total{job="agriai-backend"}[5m])
+          ) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "AgriAI API error rate above 5%"
+          description: >
+            {{ $value | humanizePercentage }} of requests are returning 5xx errors
+            over the last 5 minutes. Check Lambda logs in CloudWatch (eu-west-1,
+            stack: agriai-backend).
+
+      - alert: AgriAISlowResponses
+        expr: |
+          histogram_quantile(
+            0.95,
+            rate(http_request_duration_seconds_bucket{job="agriai-backend"}[5m])
+          ) > 2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "AgriAI API p95 latency above 2 s"
+          description: >
+            95th-percentile response time is {{ $value | humanizeDuration }}.
+            Possible Lambda cold start or upstream bottleneck on /predict.
+
+      - alert: AgriAIHighPredictionVolume
+        expr: |
+          rate(agriai_predictions_total{job="agriai-backend"}[1m]) * 60 > 100
+        for: 2m
+        labels:
+          severity: info
+        annotations:
+          summary: "AgriAI prediction volume spike (> 100/min)"
+          description: >
+            {{ $value | humanize }} predictions per minute — monitor Lambda
+            concurrency limits and consider provisioned concurrency.
+
+      - alert: AgriAIEndpointDown
+        expr: |
+          up{job="agriai-backend"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "AgriAI backend unreachable"
+          description: >
+            Prometheus cannot scrape the AgriAI backend metrics endpoint.
+            Verify the Lambda function is deployed and API Gateway is healthy.
+
+      - alert: AgriAILambdaHistoryReset
+        expr: |
+          delta(agriai_history_total{job="agriai-backend"}[5m]) < -1
+        for: 0m
+        labels:
+          severity: warning
+        annotations:
+          summary: "AgriAI Lambda cold start detected (history reset)"
+          description: >
+            The in-memory prediction history dropped — a Lambda cold start
+            occurred. This is expected but worth tracking for SLA purposes.

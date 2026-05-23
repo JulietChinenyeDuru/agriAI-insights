@@ -1,0 +1,33 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    project: agriai-insights
+    environment: local
+
+rule_files:
+  - alerts.yml
+
+scrape_configs:
+  # Local development — uvicorn running on port 8000
+  - job_name: agriai-backend
+    static_configs:
+      - targets:
+          - host.docker.internal:8000   # Mac/Windows Docker Desktop
+          # - 172.17.0.1:8000           # Linux host from inside Docker
+    metrics_path: /metrics
+    scrape_interval: 10s
+
+  # Pushgateway — used when the backend runs on Lambda
+  - job_name: pushgateway
+    honor_labels: true
+    static_configs:
+      - targets:
+          - pushgateway:9091
+    metrics_path: /metrics
+
+  # Prometheus self-monitoring
+  - job_name: prometheus
+    static_configs:
+      - targets:
+          - localhost:9090

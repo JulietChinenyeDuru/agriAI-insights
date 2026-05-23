@@ -1,0 +1,82 @@
+version: "3.9"
+
+# AgriAI Insights — Observability stack
+# Starts Prometheus, Grafana, Zipkin, and a Pushgateway (for Lambda metrics).
+#
+# Usage:
+#   cd monitoring/docker
+#   docker compose up -d
+#
+# URLs:
+#   Grafana    http://localhost:3000  (admin / admin)
+#   Prometheus http://localhost:9090
+#   Zipkin     http://localhost:9411
+#   Pushgateway http://localhost:9091
+
+services:
+  prometheus:
+    image: prom/prometheus:v2.51.0
+    container_name: agriai-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ../prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ../prometheus/alerts.yml:/etc/prometheus/alerts.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=15d
+      - --web.enable-lifecycle
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana:10.4.0
+    container_name: agriai-grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/agriai-dashboard.json
+    volumes:
+      - ../grafana/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml:ro
+      - ../grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml:ro
+      - ../grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - monitoring
+
+  zipkin:
+    image: openzipkin/zipkin:3.3
+    container_name: agriai-zipkin
+    restart: unless-stopped
+    ports:
+      - "9411:9411"
+    environment:
+      STORAGE_TYPE: mem
+    networks:
+      - monitoring
+
+  pushgateway:
+    image: prom/pushgateway:v1.8.0
+    container_name: agriai-pushgateway
+    restart: unless-stopped
+    ports:
+      - "9091:9091"
+    networks:
+      - monitoring
+
+volumes:
+  prometheus-data:
+  grafana-data:
+
+networks:
+  monitoring:
+    driver: bridge
