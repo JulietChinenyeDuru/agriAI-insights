@@ -2,7 +2,7 @@
 
 AgriAI AI Yield Intelligence for Nigerian Farmers
 
-**Closing the data gap for 36 million smallholder farmers, one prediction at a time.**
+**A data gap that costs Nigeria's smallholder farmers real yield, closed one prediction at a time.**
 
 [![Python 3.12](https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
@@ -20,11 +20,9 @@ AgriAI AI Yield Intelligence for Nigerian Farmers
 
 The Problem
 
-Nigerian agriculture sits on a paradox: it employs over 36 million smallholder farmers roughly 70% of the national labour force yet produces some of the lowest per-hectare yields in the world. The consequence is staggering.
+Nigerian agriculture employs a substantial share of the national labour force, yet productivity per hectare remains among the lowest globally. Research on smallholder farming across sub-Saharan Africa (including Nigeria) has found no meaningful productivity growth over the past decade, despite the availability of higher-yielding inputs and practices. The root cause is not effort, it is information asymmetry. While farmers in Iowa, Punjab, and the Netherlands plant against satellite imagery, soil-sensor telemetry, and ML-driven yield models, the smallholder in Borno, Kebbi, or Cross River plants against memory of last year's rain.
 
-> Nigeria loses an estimated ₦3.5 trillion (~US$2.3 billion) in crop value every year to preventable failures: planting the wrong crop for a region, mistiming the wet-and-dry-season cycle, under-fertilising, and selling into volatile markets without forecast data.
 
-The root cause is not effort. It is information asymmetry. While farmers in Iowa, Punjab, and the Netherlands plant against satellite imagery, soil-sensor telemetry, and ML-driven yield models, the smallholder in Borno, Kebbi, or Cross River plants against memory of last year's rain.
 
 ### How AgriAI Solves It
 
@@ -249,7 +247,7 @@ Real-World Impact
 
 Who benefits
 
-- **36+ million smallholder farmers** across Nigeria the primary user base.
+**Nigeria's smallholder farmers** the intended primary user base, reachable at scale through low-cost Android devices and 3G connectivity.
 - State agricultural extension officers AgriAI gives them a scalable triage tool: a tablet, an internet connection, and they can serve hundreds of farmers a week instead of dozens.
 - **Cooperatives and input-finance lenders** better yield priors translate directly into better collateral models.
 - **Agritech researchers**open API and open licence make AgriAI a citable benchmark for downstream work.
