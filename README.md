@@ -209,7 +209,7 @@ A QR code prints in the terminal. Open it in the **Expo Go** app on a real devic
 **Pointing the app at a non-localhost backend** (e.g. a phone hitting your laptop over LAN, or staging on AWS):
 
 ```bash
-EXPO_PUBLIC_AGRIAI_API_URL=http://192.168.1.20:8000 npx expo start
+PUBLIC_AGRIAI_API_URL=http://192.168.1.20:8000 npx expo start
 ```
 
 3️⃣ Running tests
@@ -230,8 +230,6 @@ npm test
 ---
 
  Screenshots
-
-> Placeholder mockups replace with live captures once the app is deployed to Expo.
 
 | Home (current season) | Prediction form | AI results |
 | --<img width="1906" height="922" alt="image" src="https://github.com/user-attachments/assets/7bb3e7e5-2de4-45a8-a78f-ce3e5fff3d90" />
