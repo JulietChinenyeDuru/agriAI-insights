@@ -235,15 +235,16 @@ npm test
 
 | Home (current season) | Prediction form | AI results |
 | --<img width="1906" height="922" alt="image" src="https://github.com/user-attachments/assets/7bb3e7e5-2de4-45a8-a78f-ce3e5fff3d90" />
-------------------- | --------------- | ---------- |
-| ![Home](docs/screenshots/home.png) | ![Prediction](docs/screenshots/prediction.png) | ![Results](docs/screenshots/results.png) |
+<img width="1917" height="867" alt="image" src="https://github.com/user-attachments/assets/211e2479-c91e-40bb-b1a2-d3367fb29cde" />
 
-| History (saved predictions) | Empty state | Recommendation card |
-| --------------------------- | ----------- | ------------------- |
-| ![History](docs/screenshots/history.png) | ![Empty](docs/screenshots/empty.png) | ![Recommendation](docs/screenshots/recommendation.png) |
+Prediction form 
+<img width="1917" height="875" alt="image" src="https://github.com/user-attachments/assets/a1e2b7e3-54b5-4ff6-ab28-6a356482ee1b" />
 
----
+AI results
+<img width="1917" height="840" alt="image" src="https://github.com/user-attachments/assets/a7b1e30b-6376-4b1b-b244-977e23fd859c" />
 
+| History (saved predictions) 
+<img width="1897" height="917" alt="image" src="https://github.com/user-attachments/assets/46ed2f29-b79f-4870-9a22-6787bbede8d7" />
 Real-World Impact
 
 Who benefits
