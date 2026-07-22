@@ -234,7 +234,8 @@ npm test
 > Placeholder mockups replace with live captures once the app is deployed to Expo.
 
 | Home (current season) | Prediction form | AI results |
-| --------------------- | --------------- | ---------- |
+| --<img width="1906" height="922" alt="image" src="https://github.com/user-attachments/assets/7bb3e7e5-2de4-45a8-a78f-ce3e5fff3d90" />
+------------------- | --------------- | ---------- |
 | ![Home](docs/screenshots/home.png) | ![Prediction](docs/screenshots/prediction.png) | ![Results](docs/screenshots/results.png) |
 
 | History (saved predictions) | Empty state | Recommendation card |
