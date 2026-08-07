@@ -1,9 +1,6 @@
 name: Deploy AgriAI backend to Lambda
 
-# Auto-deploys the FastAPI backend to AWS Lambda (eu-west-1) whenever the
-# backend/ folder, Lambda CloudFormation template, or deploy script changes
-# on the main branch. Can also be run manually via the Actions tab.
-#
+# Auto-deploys the FastAPI backend to AWS Lambda (eu-west-1) 
 # Required repository secrets:
 #   AWS_ACCESS_KEY_ID
 #   AWS_SECRET_ACCESS_KEY
